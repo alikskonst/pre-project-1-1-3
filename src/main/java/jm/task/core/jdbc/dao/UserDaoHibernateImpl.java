@@ -103,29 +103,4 @@ public class UserDaoHibernateImpl implements UserDao {
             ex.printStackTrace();
         }
     }
-
-//    private void executeQuery(String key) {
-//        try {
-//            session = util.getSession();
-//            session.beginTransaction();
-//            session.createNativeQuery(QuerySingleton.instance(null).getQuery(key));
-//            session.getTransaction().commit();
-//        } catch (HibernateException ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-
-//    private void executeQuery(String key, String... args) {
-//        try {
-//            session = util.getSession();
-//            session.beginTransaction();
-//            NativeQuery query = session.createNativeQuery(QuerySingleton.instance(null).getQuery(key));
-//            for (int i = 0; i < args.length; i++) {
-//                query.setParameter(i + 1, args[i]);
-//            }
-//            session.getTransaction().commit();
-//        } catch (HibernateException ex) {
-//            ex.printStackTrace();
-//        }
-//    }
 }

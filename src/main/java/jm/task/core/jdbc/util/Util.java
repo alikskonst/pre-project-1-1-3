@@ -2,7 +2,6 @@ package jm.task.core.jdbc.util;
 
 import jm.task.core.jdbc.conf.ConfProvider;
 import jm.task.core.jdbc.connection.QuerySingleton;
-import jm.task.core.jdbc.connection.SessionSingleton;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
@@ -16,8 +15,13 @@ public class Util {
 
     public void init() {
         ConfProvider confProvider = new ConfProvider();
-        SessionSingleton.instance(createSession(confProvider.connection()));
+        //SessionSingleton.instance(createSession(confProvider.connection()));
         QuerySingleton.instance(confProvider.queries());
+    }
+
+    public Session getSession() {
+        ConfProvider confProvider = new ConfProvider();
+        return createSession(confProvider.connection());
     }
 
     private Session createSession(Map<String, String> connectionMap) {

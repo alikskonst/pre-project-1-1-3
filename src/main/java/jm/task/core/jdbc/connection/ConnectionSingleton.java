@@ -12,18 +12,17 @@ public class ConnectionSingleton {
         this.connection = connection;
     }
 
-    public static ConnectionSingleton instance() {
+    public static ConnectionSingleton instance(Connection connection) {
         if (instance == null) {
             instance = new ConnectionSingleton(Optional.empty());
+        }
+        if (connection != null) {
+            instance = new ConnectionSingleton(Optional.of(connection));
         }
         return instance;
     }
 
     public Optional<Connection> getConnection() {
         return connection;
-    }
-
-    public void setConnection(Connection connection) {
-        instance = new ConnectionSingleton(connection == null ? Optional.empty() : Optional.of(connection));
     }
 }

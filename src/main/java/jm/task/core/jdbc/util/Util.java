@@ -12,8 +12,8 @@ public class Util {
 
     public void init() {
         ConfProvider confProvider = new ConfProvider();
-        ConnectionSingleton.instance().setConnection(createConnection(confProvider.connection()));
-        QuerySingleton.instance().setQueryMap(confProvider.queries());
+        ConnectionSingleton.instance(createConnection(confProvider.connection()));
+        QuerySingleton.instance(confProvider.queries());
     }
 
     private Connection createConnection(Map<String, String> conf) {

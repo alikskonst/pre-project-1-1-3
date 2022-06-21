@@ -16,9 +16,9 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void createUsersTable() {
-        Optional<Connection> connection = ConnectionSingleton.instance().getConnection();
+        Optional<Connection> connection = ConnectionSingleton.instance(null).getConnection();
         if (connection.isPresent()) {
-            String query = QuerySingleton.instance().getQuery("userCreateTable");
+            String query = QuerySingleton.instance(null).getQuery("userCreateTable");
             try (Statement statement = connection.get().createStatement()) {
                 // todo: сообщить?
                 statement.execute(query);
@@ -29,9 +29,9 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void dropUsersTable() {
-        Optional<Connection> connection = ConnectionSingleton.instance().getConnection();
+        Optional<Connection> connection = ConnectionSingleton.instance(null).getConnection();
         if (connection.isPresent()) {
-            String query = QuerySingleton.instance().getQuery("userDropTable");
+            String query = QuerySingleton.instance(null).getQuery("userDropTable");
             try (Statement statement = connection.get().createStatement()) {
                 // todo: сообщить?
                 statement.execute(query);
@@ -42,9 +42,9 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        Optional<Connection> connection = ConnectionSingleton.instance().getConnection();
+        Optional<Connection> connection = ConnectionSingleton.instance(null).getConnection();
         if (connection.isPresent()) {
-            String query = QuerySingleton.instance().getQuery("userCreate");
+            String query = QuerySingleton.instance(null).getQuery("userCreate");
             try (PreparedStatement preparedStatement = connection.get().prepareStatement(query)) {
                 preparedStatement.setString(1, name);
                 preparedStatement.setString(2, lastName);
@@ -59,9 +59,9 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void removeUserById(long id) {
-        Optional<Connection> connection = ConnectionSingleton.instance().getConnection();
+        Optional<Connection> connection = ConnectionSingleton.instance(null).getConnection();
         if (connection.isPresent()) {
-            String query = QuerySingleton.instance().getQuery("userRemove");
+            String query = QuerySingleton.instance(null).getQuery("userRemove");
             try (PreparedStatement preparedStatement = connection.get().prepareStatement(query)) {
                 preparedStatement.setLong(1, id);
                 if (preparedStatement.executeUpdate() > 0) {
@@ -74,9 +74,9 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public List<User> getAllUsers() {
-        Optional<Connection> connection = ConnectionSingleton.instance().getConnection();
+        Optional<Connection> connection = ConnectionSingleton.instance(null).getConnection();
         if (connection.isPresent()) {
-            String query = QuerySingleton.instance().getQuery("userFindAll");
+            String query = QuerySingleton.instance(null).getQuery("userFindAll");
             try (Statement statement = connection.get().createStatement()) {
                 ResultSet resultSet = statement.executeQuery(query);
                 // todo: как память выделить?
@@ -98,10 +98,10 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void cleanUsersTable() {
-        Optional<Connection> connection = ConnectionSingleton.instance().getConnection();
+        Optional<Connection> connection = ConnectionSingleton.instance(null).getConnection();
         if (connection.isPresent()) {
             // todo: пересоздать или очистить?
-            String query = QuerySingleton.instance().getQuery("userRemoveAll");
+            String query = QuerySingleton.instance(null).getQuery("userRemoveAll");
 //            String query = QuerySingleton.instance().getQuery("userTruncateTable");
             try (Statement statement = connection.get().createStatement()) {
                 statement.execute(query);

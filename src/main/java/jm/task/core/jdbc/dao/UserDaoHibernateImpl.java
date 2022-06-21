@@ -5,6 +5,7 @@ import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.query.NativeQuery;
 
 import java.util.Collections;
@@ -13,7 +14,6 @@ import java.util.List;
 public class UserDaoHibernateImpl implements UserDao {
 
     private final Util util;
-    private Session session;
 
     public UserDaoHibernateImpl() {
         this.util = new Util();
@@ -23,7 +23,8 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void createUsersTable() {
         try {
-            session = util.getSession();
+            SessionFactory sessionFactory = util.getSessionFactory();
+            Session session = sessionFactory.openSession();
             session.beginTransaction();
             session.createNativeQuery(QuerySingleton.instance(null).getQuery("userCreateTable"));
             session.getTransaction().commit();
@@ -35,7 +36,8 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void dropUsersTable() {
         try {
-            session = util.getSession();
+            SessionFactory sessionFactory = util.getSessionFactory();
+            Session session = sessionFactory.openSession();
             session.beginTransaction();
             session.createNativeQuery(QuerySingleton.instance(null).getQuery("userDropTable"));
             session.getTransaction().commit();
@@ -47,7 +49,8 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void saveUser(String name, String lastName, byte age) {
         try {
-            session = util.getSession();
+            SessionFactory sessionFactory = util.getSessionFactory();
+            Session session = sessionFactory.openSession();
             session.beginTransaction();
             NativeQuery<User> nativeQuery = session.createNativeQuery(QuerySingleton.instance(null).getQuery("userCreate"), User.class);
             nativeQuery.setParameter(1, name);
@@ -62,7 +65,8 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void removeUserById(long id) {
         try {
-            session = util.getSession();
+            SessionFactory sessionFactory = util.getSessionFactory();
+            Session session = sessionFactory.openSession();
             session.beginTransaction();
             NativeQuery<Integer> query = session.createNativeQuery(QuerySingleton.instance(null).getQuery("userRemove"), Integer.class);
             query.setParameter(1, id);
@@ -75,7 +79,8 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public List<User> getAllUsers() {
         try {
-            session = util.getSession();
+            SessionFactory sessionFactory = util.getSessionFactory();
+            Session session = sessionFactory.openSession();
             session.beginTransaction();
             NativeQuery<User> nativeQuery = session.createNativeQuery(QuerySingleton.instance(null).getQuery("userFindAll"), User.class);
             session.getTransaction().commit();
@@ -89,7 +94,8 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void cleanUsersTable() {
         try {
-            session = util.getSession();
+            SessionFactory sessionFactory = util.getSessionFactory();
+            Session session = sessionFactory.openSession();
             session.beginTransaction();
             session.createNativeQuery(QuerySingleton.instance(null).getQuery("userRemoveAll"));
             session.getTransaction().commit();

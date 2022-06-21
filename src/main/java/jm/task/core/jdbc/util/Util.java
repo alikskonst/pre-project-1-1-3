@@ -2,7 +2,7 @@ package jm.task.core.jdbc.util;
 
 import jm.task.core.jdbc.conf.ConfProvider;
 import jm.task.core.jdbc.connection.QuerySingleton;
-import org.hibernate.Session;
+import jm.task.core.jdbc.connection.SettingsSingleton;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
@@ -15,21 +15,21 @@ public class Util {
 
     public void init() {
         ConfProvider confProvider = new ConfProvider();
-        //SessionSingleton.instance(createSession(confProvider.connection()));
+        SettingsSingleton.instance(confProvider.connection());
         QuerySingleton.instance(confProvider.queries());
     }
 
-    public Session getSession() {
-        ConfProvider confProvider = new ConfProvider();
-        return createSession(confProvider.connection());
+    public SessionFactory getSessionFactory() {
+        return createSessionFactory(SettingsSingleton.instance(null).getSettings());
     }
 
-    private Session createSession(Map<String, String> connectionMap) {
-        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(connectionMap).build();
+    private SessionFactory createSessionFactory(Map<String, String> settings) {
+        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(settings).build();
         MetadataSources metadataSources = new MetadataSources(serviceRegistry);
         Metadata metadata = metadataSources.buildMetadata();
-        SessionFactory sessionFactory = metadata.getSessionFactoryBuilder().build();
+        //SessionFactory sessionFactory = metadata.getSessionFactoryBuilder().build();
+        return metadata.getSessionFactoryBuilder().build();
         //Session session = sessionFactory.openSession();
-        return sessionFactory.getCurrentSession();
+        //return sessionFactory.getCurrentSession();
     }
 }

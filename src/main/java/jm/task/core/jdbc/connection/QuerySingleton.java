@@ -1,6 +1,6 @@
 package jm.task.core.jdbc.connection;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 
 public class QuerySingleton {
@@ -12,19 +12,18 @@ public class QuerySingleton {
         this.queryMap = queryMap;
     }
 
-    public static QuerySingleton instance() {
+    public static QuerySingleton instance(Map<String, String> queryMap) {
         if (instance == null) {
-            instance = new QuerySingleton(new HashMap<>(0));
+            instance = new QuerySingleton(Collections.emptyMap());
+        }
+        if (queryMap != null && !queryMap.isEmpty()) {
+            instance = new QuerySingleton(queryMap);
         }
         return instance;
     }
 
     public Map<String, String> getQueryMap() {
         return queryMap;
-    }
-
-    public void setQueryMap(Map<String, String> queryMap) {
-        instance = new QuerySingleton(queryMap);
     }
 
     public String getQuery(String key) {

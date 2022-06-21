@@ -33,13 +33,6 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void saveUser(String name, String lastName, byte age) {
         executeQuery("userCreate", name, lastName, String.valueOf(age));
-//        try {
-//            session.beginTransaction();
-//            session.createQuery(QuerySingleton.instance(null).getQuery("userCreate"));
-//            session.getTransaction().commit();
-//        } catch (HibernateException ex) {
-//            ex.printStackTrace();
-//        }
     }
 
     @Override
@@ -50,10 +43,10 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public List<User> getAllUsers() {
         try {
-            //session.beginTransaction();
+            session.beginTransaction();
             Query<User> query = session.createQuery(QuerySingleton.instance(null).getQuery("userFindAll"));
+            session.getTransaction().commit();
             return query.list();
-            //session.getTransaction().commit();
         } catch (HibernateException ex) {
             ex.printStackTrace();
         }
@@ -87,8 +80,4 @@ public class UserDaoHibernateImpl implements UserDao {
             ex.printStackTrace();
         }
     }
-
-//    private List<User> executeQueryToList(String key) {
-//
-//    }
 }

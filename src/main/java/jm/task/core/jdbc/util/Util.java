@@ -25,6 +25,7 @@ public class Util {
         MetadataSources metadataSources = new MetadataSources(serviceRegistry);
         Metadata metadata = metadataSources.buildMetadata();
         SessionFactory sessionFactory = metadata.getSessionFactoryBuilder().build();
+        Session session = sessionFactory.getCurrentSession();
         return sessionFactory.getCurrentSession();
     }
 }

@@ -1,6 +1,7 @@
 package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.connection.QuerySingleton;
+import jm.task.core.jdbc.connection.SessionSingleton;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 import org.hibernate.HibernateException;
@@ -12,10 +13,11 @@ import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
 
-    private final Util util;
+    private final Session session;
 
     public UserDaoHibernateImpl() {
-        this.util = new Util();
+        new Util().init();
+        this.session = SessionSingleton.instance(null).getSession();
     }
 
     @Override
@@ -30,28 +32,26 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-        executeQuery("userDropTable", name, lastName, String.valueOf(age));
-        try {
-            Session session = util.getSessionFactory().openSession();
-            session.beginTransaction();
-            session.createQuery(QuerySingleton.instance().getQuery("userDropTable"));
-            session.getTransaction().commit();
-        } catch (HibernateException ex) {
-            ex.printStackTrace();
-        }
+        executeQuery("userCreate", name, lastName, String.valueOf(age));
+//        try {
+//            session.beginTransaction();
+//            session.createQuery(QuerySingleton.instance(null).getQuery("userCreate"));
+//            session.getTransaction().commit();
+//        } catch (HibernateException ex) {
+//            ex.printStackTrace();
+//        }
     }
 
     @Override
     public void removeUserById(long id) {
-        executeQuery("userDropTable", String.valueOf(id));
+        executeQuery("userRemove", String.valueOf(id));
     }
 
     @Override
     public List<User> getAllUsers() {
         try {
-            Session session = util.getSessionFactory().openSession();
             //session.beginTransaction();
-            Query<User> query = session.createQuery(QuerySingleton.instance().getQuery("userDropTable"));
+            Query<User> query = session.createQuery(QuerySingleton.instance(null).getQuery("userFindAll"));
             return query.list();
             //session.getTransaction().commit();
         } catch (HibernateException ex) {
@@ -67,9 +67,8 @@ public class UserDaoHibernateImpl implements UserDao {
 
     private void executeQuery(String key) {
         try {
-            Session session = util.getSessionFactory().openSession();
             session.beginTransaction();
-            session.createQuery(QuerySingleton.instance().getQuery(key));
+            session.createQuery(QuerySingleton.instance(null).getQuery(key));
             session.getTransaction().commit();
         } catch (HibernateException ex) {
             ex.printStackTrace();
@@ -78,9 +77,8 @@ public class UserDaoHibernateImpl implements UserDao {
 
     private void executeQuery(String key, String... args) {
         try {
-            Session session = util.getSessionFactory().openSession();
             session.beginTransaction();
-            Query query = session.createQuery(QuerySingleton.instance().getQuery(key));
+            Query query = session.createQuery(QuerySingleton.instance(null).getQuery(key));
             for (int i = 0; i < args.length; i++) {
                 query.setParameter(i + 1, args[i]);
             }

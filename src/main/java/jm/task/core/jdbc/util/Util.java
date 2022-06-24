@@ -1,35 +1,40 @@
 package jm.task.core.jdbc.util;
 
-import jm.task.core.jdbc.conf.ConfProvider;
-import jm.task.core.jdbc.connection.QuerySingleton;
-import jm.task.core.jdbc.connection.SettingsSingleton;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.service.ServiceRegistry;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Util {
 
-    public void init() {
-        ConfProvider confProvider = new ConfProvider();
-        SettingsSingleton.instance(confProvider.connection());
-        QuerySingleton.instance(confProvider.queries());
-    }
-
     public SessionFactory getSessionFactory() {
-        return createSessionFactory(SettingsSingleton.instance(null).getSettings());
+        return createSessionFactory();
     }
 
-    private SessionFactory createSessionFactory(Map<String, String> settings) {
-        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(settings).build();
+    private SessionFactory createSessionFactory() {
+        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(getSetting()).build();
         MetadataSources metadataSources = new MetadataSources(serviceRegistry);
         Metadata metadata = metadataSources.buildMetadata();
         //SessionFactory sessionFactory = metadata.getSessionFactoryBuilder().build();
         return metadata.getSessionFactoryBuilder().build();
         //Session session = sessionFactory.openSession();
         //return sessionFactory.getCurrentSession();
+    }
+
+    private Map<String, String> getSetting() {
+        Map<String, String> map = new HashMap<>();
+        map.put("connection.driver_class", "com.mysql.cj.jdbc.Driver");
+        map.put("dialect", "org.hibernate.dialect.MySQL8Dialect");
+        map.put("hibernate.connection.url", "jdbc:mysql://localhost:3306/pre_project_113");
+        map.put("hibernate.connection.username", "root");
+        map.put("hibernate.connection.password", "root");
+        map.put("hibernate.current_session_context_class", "thread");
+        map.put("hibernate.show_sql", "true");
+        map.put("hibernate.format_sql", "true");
+        return map;
     }
 }

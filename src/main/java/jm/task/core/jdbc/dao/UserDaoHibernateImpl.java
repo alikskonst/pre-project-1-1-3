@@ -1,6 +1,5 @@
 package jm.task.core.jdbc.dao;
 
-import jm.task.core.jdbc.connection.QuerySingleton;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 import org.hibernate.HibernateException;
@@ -16,8 +15,7 @@ public class UserDaoHibernateImpl implements UserDao {
     private final Util util;
 
     public UserDaoHibernateImpl() {
-        this.util = new Util();
-        util.init();
+        util = new Util();
     }
 
     @Override
@@ -26,7 +24,7 @@ public class UserDaoHibernateImpl implements UserDao {
             SessionFactory sessionFactory = util.getSessionFactory();
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            session.createNativeQuery(QuerySingleton.instance(null).getQuery("userCreateTable"));
+            session.createNativeQuery("CREATE TABLE IF NOT EXISTS user (id bigint NOT NULL AUTO_INCREMENT, name varchar(255) NOT NULL, last_name varchar(255) NOT NULL, age tinyint NOT NULL, PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3");
             session.getTransaction().commit();
         } catch (HibernateException ex) {
             ex.printStackTrace();
@@ -39,7 +37,7 @@ public class UserDaoHibernateImpl implements UserDao {
             SessionFactory sessionFactory = util.getSessionFactory();
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            session.createNativeQuery(QuerySingleton.instance(null).getQuery("userDropTable"));
+            session.createNativeQuery("DROP TABLE IF EXISTS user");
             session.getTransaction().commit();
         } catch (HibernateException ex) {
             ex.printStackTrace();
@@ -52,7 +50,7 @@ public class UserDaoHibernateImpl implements UserDao {
             SessionFactory sessionFactory = util.getSessionFactory();
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            NativeQuery<User> nativeQuery = session.createNativeQuery(QuerySingleton.instance(null).getQuery("userCreate"), User.class);
+            NativeQuery<User> nativeQuery = session.createNativeQuery("INSERT INTO user (name, last_name, age) VALUES (?, ?, ?)", User.class);
             nativeQuery.setParameter(1, name);
             nativeQuery.setParameter(2, lastName);
             nativeQuery.setParameter(3, age);
@@ -68,7 +66,7 @@ public class UserDaoHibernateImpl implements UserDao {
             SessionFactory sessionFactory = util.getSessionFactory();
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            NativeQuery<Integer> query = session.createNativeQuery(QuerySingleton.instance(null).getQuery("userRemove"), Integer.class);
+            NativeQuery<Integer> query = session.createNativeQuery("DELETE FROM user WHERE id = ?", Integer.class);
             query.setParameter(1, id);
             session.getTransaction().commit();
         } catch (HibernateException ex) {
@@ -82,7 +80,7 @@ public class UserDaoHibernateImpl implements UserDao {
             SessionFactory sessionFactory = util.getSessionFactory();
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            NativeQuery<User> nativeQuery = session.createNativeQuery(QuerySingleton.instance(null).getQuery("userFindAll"), User.class);
+            NativeQuery<User> nativeQuery = session.createNativeQuery("SELECT id, name, last_name, age FROM user", User.class);
             session.getTransaction().commit();
             return nativeQuery.getResultList();
         } catch (HibernateException ex) {
@@ -97,7 +95,7 @@ public class UserDaoHibernateImpl implements UserDao {
             SessionFactory sessionFactory = util.getSessionFactory();
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            session.createNativeQuery(QuerySingleton.instance(null).getQuery("userRemoveAll"));
+            session.createNativeQuery("DELETE FROM user");
             session.getTransaction().commit();
         } catch (HibernateException ex) {
             ex.printStackTrace();

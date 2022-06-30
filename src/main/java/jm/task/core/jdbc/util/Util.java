@@ -8,7 +8,7 @@ public class Util {
 
     public Optional<Connection> getConnection() {
         try {
-            Class.forName("");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             return Optional.of(
                     DriverManager.getConnection(
                             "jdbc:mysql://localhost:3306/pre_project_113?useSSL=false&useUnicode=true&characterEncoding=utf-8&characterSetResults=utf-8&autoReconnect=true",

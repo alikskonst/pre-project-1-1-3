@@ -1,32 +1,24 @@
 package jm.task.core.jdbc.util;
 
-import jm.task.core.jdbc.conf.ConfProvider;
-import jm.task.core.jdbc.connection.ConnectionSingleton;
-import jm.task.core.jdbc.connection.QuerySingleton;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.Map;
+import java.util.Optional;
 
 public class Util {
 
-    public void init() {
-        ConfProvider confProvider = new ConfProvider();
-        ConnectionSingleton.instance().setConnection(createConnection(confProvider.connection()));
-        QuerySingleton.instance().setQueryMap(confProvider.queries());
-    }
-
-    private Connection createConnection(Map<String, String> conf) {
+    public Optional<Connection> getConnection() {
         try {
-            Class.forName(conf.get("driver"));
-            return DriverManager.getConnection(
-                    conf.get("url"),
-                    conf.get("username"),
-                    conf.get("password")
+            Class.forName("");
+            return Optional.of(
+                    DriverManager.getConnection(
+                            "jdbc:mysql://localhost:3306/pre_project_113?useSSL=false&useUnicode=true&characterEncoding=utf-8&characterSetResults=utf-8&autoReconnect=true",
+                            "root",
+                            "root"
+                    )
             );
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return null;
+        return Optional.empty();
     }
 }
